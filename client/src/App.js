@@ -4,10 +4,11 @@ import {
   Button, Container, Form, Navbar
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Link, Redirect, Route, Switch } from 'react-router-dom';
+import { Outlet, Route, Routes } from 'react-router-dom';
 
-import SignUp from './components/SignUp';
+import Landing from './components/Landing.js';
 import LogIn from './components/LogIn';
+import SignUp from './components/SignUp';
 
 import './App.css';
 
@@ -25,8 +26,7 @@ function App () {
       );
       setLoggedIn(true);
       return { response, isError: false };
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
       return { response: error, isError: true };
     }
@@ -38,62 +38,61 @@ function App () {
   };
 
   return (
-    <div>
-      <Navbar bg='light' expand='lg' variant='light'>
-        <LinkContainer to='/'>
-          <Navbar.Brand className='logo'>Taxi</Navbar.Brand>
-        </LinkContainer>
-        <Navbar.Toggle />
-        <Navbar.Collapse>
-          {
-            isLoggedIn && (
-              <Form inline className='ml-auto'>
-                <Button type='button' onClick={() => logOut()}>Log out</Button>
-              </Form>
-            )
+    <Routes>
+      <Route
+        path='/'
+        element={
+          <Layout
+            isLoggedIn={isLoggedIn}
+            logOut={logOut}
+          />
+        }
+      >
+        <Route index element={<Landing isLoggedIn={isLoggedIn} />} />
+        <Route
+          path='sign-up'
+          element={
+            <SignUp isLoggedIn={isLoggedIn} />
           }
-        </Navbar.Collapse>
+        />
+        <Route
+          path='log-in'
+          element={
+            <LogIn
+              isLoggedIn={isLoggedIn}
+              logIn={logIn}
+            />
+          }
+        />
+      </Route>
+    </Routes>
+  );
+}
+
+function Layout ({ isLoggedIn, logOut }) {
+  return (
+    <>
+      <Navbar bg='light' expand='lg' variant='light'>
+        <Container>
+          <LinkContainer to='/'>
+            <Navbar.Brand className='logo'>Taxi</Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle />
+          <Navbar.Collapse className='justify-content-end'>
+            {
+              isLoggedIn && (
+                <Form>
+                  <Button type='button' onClick={() => logOut()}>Log out</Button>
+                </Form>
+              )
+            }
+          </Navbar.Collapse>
+        </Container>
       </Navbar>
       <Container className='pt-3'>
-        <Switch>
-          <Route exact path='/' render={() => (
-            <div className='middle-center'>
-              <h1 className='landing logo'>Taxi</h1>
-              {
-                !isLoggedIn &&
-                <Link
-                  id='signUp'
-                  className='btn btn-primary'
-                  to='/sign-up'
-                >Sign up</Link>
-              }
-              {
-                !isLoggedIn &&
-                <Link
-                  id='logIn'
-                  className='btn btn-primary'
-                  to='/log-in'
-                >Log in</Link>
-              }
-            </div>
-          )} />
-          <Route path='/sign-up' render={() => (
-            isLoggedIn ? (
-              <Redirect to='/' />
-            ) : (
-              <SignUp />
-            )
-          )} />
-          <Route path='/log-in' render={() => (
-            isLoggedIn ? (
-              <Redirect to='/' />
-            ) : (
-              <LogIn logIn={logIn} />
-            )
-          )} />
-        </Switch>
+        <Outlet />
       </Container>
-    </div>
+    </>
   );
 }
 
