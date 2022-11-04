@@ -3,7 +3,7 @@ const faker = require('faker');
 const randomEmail = faker.internet.email();
 
 const logIn = () => {
-  const { username, password } = Cypress.env('credentials');
+  const { password } = Cypress.env('credentials');
 
   // Capture HTTP requests.
   cy.intercept('POST', 'log_in').as('logIn');
@@ -53,7 +53,7 @@ describe('Authentication', function () {
     cy.intercept('POST', 'sign_up', {
       statusCode: 400,
       body: {
-        'username': [
+        username: [
           'A user with that username already exists.'
         ]
       }
@@ -94,11 +94,11 @@ describe('Authentication', function () {
   });
 
   it('Shows an alert on login error.', function () {
-    const { username, password } = Cypress.env('credentials');
+    const { password } = Cypress.env('credentials');
     cy.intercept('POST', 'log_in', {
       statusCode: 400,
       body: {
-        '__all__': [
+        __all__: [
           'Please enter a correct username and password. ' +
           'Note that both fields may be case-sensitive.'
         ]

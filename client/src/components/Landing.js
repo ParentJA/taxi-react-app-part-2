@@ -7,16 +7,18 @@ function Landing (props) {
     <div className='middle-center'>
       <h1 className='landing logo'>Taxi</h1>
       {
-        props.isLoggedIn
-          ? (
-            <></>
-            )
-          : (
-            <ButtonGroup>
-              <LinkContainer to='/sign-up'><Button>Sign up</Button></LinkContainer>
-              <LinkContainer to='/log-in'><Button>Log in</Button></LinkContainer>
-            </ButtonGroup>
-            )
+        props.isLoggedIn ? (
+          <></>
+        ) : (
+          <ButtonGroup>
+            <LinkContainer to='/sign-up'>
+              <Button data-cy="signUp">Sign up</Button>
+            </LinkContainer>
+            <LinkContainer to='/log-in'>
+              <Button data-cy="logIn">Log in</Button>
+            </LinkContainer>
+          </ButtonGroup>
+        )
       }
     </div>
   );

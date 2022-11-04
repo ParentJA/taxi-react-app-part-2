@@ -6,7 +6,7 @@ import {
 import { LinkContainer } from 'react-router-bootstrap';
 import { Outlet, Route, Routes } from 'react-router-dom';
 
-import Landing from './components/Landing.js';
+import Landing from './components/Landing';
 import LogIn from './components/LogIn';
 import SignUp from './components/SignUp';
 
@@ -26,7 +26,8 @@ function App () {
       );
       setLoggedIn(true);
       return { response, isError: false };
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error);
       return { response: error, isError: true };
     }
@@ -36,7 +37,7 @@ function App () {
     window.localStorage.removeItem('taxi.auth');
     setLoggedIn(false);
   };
-
+  
   return (
     <Routes>
       <Route
@@ -82,7 +83,11 @@ function Layout ({ isLoggedIn, logOut }) {
             {
               isLoggedIn && (
                 <Form>
-                  <Button type='button' onClick={() => logOut()}>Log out</Button>
+                  <Button 
+                    data-cy='logOut' 
+                    type='button' 
+                    onClick={() => logOut()}
+                  >Log out</Button>
                 </Form>
               )
             }
